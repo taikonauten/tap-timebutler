@@ -4,9 +4,7 @@ import os
 
 import backoff
 import requests
-import pendulum
 import csv
-import json
 import numpy as np
 
 import singer
@@ -144,6 +142,8 @@ def do_sync():
     LOGGER.info("Starting sync")
 
     sync_endpoint("absences")
+
+    sync_endpoint("users")
     
     LOGGER.info("Sync complete")
 
