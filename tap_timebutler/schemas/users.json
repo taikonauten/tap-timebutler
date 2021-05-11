@@ -47,15 +47,15 @@
       "type": ["null", "string"]
     },
     "date_of_entry": {
-      "type": ["null", "string"],
+      "type": ["-", "string"],
       "format": "date-time"
     },
     "date_of_separation": {
-      "type": ["null", "string"],
+      "type": ["-", "string"],
       "format": "date-time"
     },
     "birthday": {
-      "type": ["null", "string"],
+      "type": ["-", "string"],
       "format": "date-time"
     }
   }
