@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": ["null", "integer"]
+    },
+    "from": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "to": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "half_a_day": {
+      "type": ["null", "boolean"]
+    },
+    "morning": {
+      "type": ["null", "boolean"]
+    },
+    "user_id": {
+      "type": ["null", "string"]
+    },
+    "employee_number": {
+      "type": ["null", "string"]
+    },
+    "type": {
+      "type": ["null", "string"]
+    },
+    "extra_vacation_day": {
+      "type": ["null", "boolean"]
+    },
+    "state": {
+      "type": ["null", "boolean"]
+    },
+    "substitute_state": {
+      "type": ["null", "string"]
+    },
+    "workdays": {
+      "type": ["null", "string"]
+    },
+    "hours": {
+      "type": ["null", "string"]
+    },
+    "medical_certificate": {
+      "type": ["null", "string"]
+    },
+    "comments": {
+      "type": ["null", "string"]
+    },
+    "user_id_of_the_substitute": {
+      "type": ["null", "string"]
+    }
+  }
+}
