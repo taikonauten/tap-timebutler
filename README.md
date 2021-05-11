@@ -28,7 +28,8 @@ API V2 Author: Bryan Mewes (bm@taikonauten.com)
 
     ```json
     {
-        "absences": "2000-01-01T00:00:00Z"
+        "absences": "2000-01-01T00:00:00Z",
+        "users": "2000-01-01T00:00:00Z"
     }
     ```
 
