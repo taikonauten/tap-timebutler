@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": ["null", "integer"]
+    },
+    "name": {
+      "type": ["null", "string"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    },
+    "budget_in_hours": {
+      "type": ["null", "number"]
+    },
+    "comments": {
+      "type": ["null", "string"]
+    },
+    "creation_date": {
+      "type": ["null", "string"]
+    }
+  }
+}

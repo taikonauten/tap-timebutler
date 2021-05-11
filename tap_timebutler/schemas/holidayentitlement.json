@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": ["null", "integer"]
+    },
+    "vacation_contingent": {
+      "type": ["null", "string"]
+    },
+    "remaining_vacation": {
+      "type": ["null", "string"]
+    },
+    "extra_vacation_days": {
+      "type": ["null", "string"]
+    },
+    "aditional_vacation_for_severly_challenged_persons": {
+      "type": ["null", "string"]
+    },
+    "expired_vacation": {
+      "type": ["null", "string"]
+    },
+    "paid_out_vacation": {
+      "type": ["null", "string"]
+    }
+  }
+}

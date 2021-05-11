@@ -1,40 +1,32 @@
 {
   "type": "object",
   "properties": {
-    "id": {
+    "user_id": {
       "type": ["null", "integer"]
     },
-    "client_id": {
-      "type": ["null", "integer"]
-    },
-    "title": {
+    "valid_from": {
       "type": ["null", "string"]
     },
-    "first_name": {
+    "monday_working_time": {
       "type": ["null", "string"]
     },
-    "last_name": {
+    "tuesday_working_time": {
       "type": ["null", "string"]
     },
-    "email": {
+    "wednesday_working_time": {
       "type": ["null", "string"]
     },
-    "phone_office": {
+    "thursday_working_time": {
       "type": ["null", "string"]
     },
-    "phone_mobile": {
+    "friday_working_time": {
       "type": ["null", "string"]
     },
-    "fax": {
+    "saturday_working_time": {
       "type": ["null", "string"]
     },
-    "created_at": {
-      "type": ["null", "string"],
-      "format": "date-time"
-    },
-    "updated_at": {
-      "type": ["null", "string"],
-      "format": "date-time"
+    "sunday_working_time": {
+      "type": ["null", "string"]
     }
   }
 }

@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": ["null", "integer"]
+    },
+    "user_id": {
+      "type": ["null", "integer"]
+    },
+    "date": {
+      "type": ["null", "string"]
+    },
+    "start_time": {
+      "type": ["null", "string"]
+    },
+    "end_time": {
+      "type": ["null", "string"]
+    },
+    "working_time_in_seconds": {
+      "type": ["null", "number"]
+    },
+    "pause_in_seconds": {
+      "type": ["null", "number"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    },
+    "project_id": {
+      "type": ["null", "number"]
+    },
+    "service_id": {
+      "type": ["null", "number"]
+    },
+    "comments": {
+      "type": ["null", "string"]
+    }
+  }
+}
