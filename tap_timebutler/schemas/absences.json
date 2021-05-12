@@ -4,11 +4,11 @@
     "id": {
       "type": ["null", "integer"]
     },
-    "from": {
+    "day_from": {
       "type": ["null", "string"],
       "format": "date-time"
     },
-    "to": {
+    "day_to": {
       "type": ["null", "string"],
       "format": "date-time"
     },
