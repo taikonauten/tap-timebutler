@@ -24,13 +24,13 @@
     "employee_number": {
       "type": ["null", "string"]
     },
-    "type": {
+    "absence_type": {
       "type": ["null", "string"]
     },
     "extra_vacation_day": {
       "type": ["null", "boolean"]
     },
-    "state": {
+    "absence_state": {
       "type": ["null", "boolean"]
     },
     "substitute_state": {

@@ -7,7 +7,7 @@
     "user_id": {
       "type": ["null", "integer"]
     },
-    "date": {
+    "date_date": {
       "type": ["null", "string"]
     },
     "start_time": {

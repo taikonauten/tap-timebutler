@@ -4,10 +4,10 @@
     "id": {
       "type": ["null", "integer"]
     },
-    "name": {
+    "service_name": {
       "type": ["null", "string"]
     },
-    "state": {
+    "service_state": {
       "type": ["null", "string"]
     },
     "billable": {

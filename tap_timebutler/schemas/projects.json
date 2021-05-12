@@ -4,10 +4,10 @@
     "id": {
       "type": ["null", "integer"]
     },
-    "name": {
+    "project_name": {
       "type": ["null", "string"]
     },
-    "state": {
+    "project_state": {
       "type": ["null", "string"]
     },
     "budget_in_hours": {
