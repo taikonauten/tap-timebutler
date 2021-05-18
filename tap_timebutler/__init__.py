@@ -6,7 +6,6 @@ import backoff
 import requests
 import csv
 import numpy as np
-from datetime import timedelta, date
 
 import singer
 from singer import Transformer, utils
@@ -88,11 +87,15 @@ def remove_empty_date_times(item, schema):
         if item.get(field) is None:
             del item[field]
 
-def daterange(date1, date2):
-    for n in range(int ((date2 - date1).days)+1):
-        yield date1 + timedelta(n)
 
-def sync_absences(schema_name):
+def append_times_to_dates(item, date_fields):
+    if date_fields:
+        for date_field in date_fields:
+            if item.get(date_field):
+                item[date_field] = utils.strftime(utils.strptime_with_tz(item[date_field]))
+
+
+def sync_endpoint(schema_name, endpoint=None, date_fields=None): #pylint: disable=too-many-arguments
     schema = load_schema(schema_name)
 
     singer.write_schema(schema_name,
@@ -100,7 +103,7 @@ def sync_absences(schema_name):
                         ["id"])
 
     with Transformer() as transformer:
-        url = get_url(schema_name)
+        url = get_url(endpoint or schema_name)
         response = request(url)
         time_extracted = utils.now()
 
@@ -118,71 +121,15 @@ def sync_absences(schema_name):
 
             while i < len(row):
 
-                if aligned_schema_row == 'the_day':
+                  aligned_schema_row[properties[i]] = row[i].strip()
 
-                    continue
-
-                else:
-
-                    aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
-                
-                i += 1
-
-            date_from = aligned_schema_row['day_from'].split('/')
-            date_to = aligned_schema_row['day_to'].split('/')
-
-            k = 0
-
-            for dt in daterange(date(int(date_from[2]), int(date_from[1]), int(date_from[0])), date(int(date_to[2]), int(date_to[1]), int(date_to[0]))):
-
-                date_aligned_shema_row = aligned_schema_row
-              
-                date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
-                date_aligned_shema_row['the_day'] = dt.strftime("%d.%m.%Y")
-
-                k += 1
-
-                remove_empty_date_times(date_aligned_shema_row, schema)
-
-                item = transformer.transform(date_aligned_shema_row, schema)
-
-                singer.write_record(schema_name,
-                                    item,
-                                    time_extracted=time_extracted)
-
-    singer.write_state(STATE)
-
-def sync_endpoint(schema_name):
-    schema = load_schema(schema_name)
-
-    singer.write_schema(schema_name,
-                        schema,
-                        ["id"])
-
-    with Transformer() as transformer:
-        url = get_url(schema_name)
-        response = request(url)
-        time_extracted = utils.now()
-
-        properties = list(schema['properties'])
-
-        del response[0]
-
-        for row in response:
-
-            aligned_schema_row = {}
-
-            row = np.array(row[0].split(';'))
-
-            i = 0
-
-            while i < len(row):
-
-                aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
+                  i += 1
 
             remove_empty_date_times(aligned_schema_row, schema)
 
             item = transformer.transform(aligned_schema_row, schema)
+
+            append_times_to_dates(item, date_fields)
 
             singer.write_record(schema_name,
                                 item,
@@ -193,6 +140,8 @@ def sync_endpoint(schema_name):
 
 def do_sync():
     LOGGER.info("Starting sync")
+
+    sync_endpoint("absences")
 
     sync_endpoint("users")
 
@@ -205,8 +154,6 @@ def do_sync():
     sync_endpoint("projects")
 
     sync_endpoint("services")
-    
-    sync_absences("absences")
     
     LOGGER.info("Sync complete")
 
