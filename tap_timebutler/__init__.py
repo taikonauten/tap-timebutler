@@ -149,8 +149,9 @@ def sync_absences(schema_name):
                 singer.write_record(schema_name,
                                     item,
                                     time_extracted=time_extracted)
+                
+                singer.write_state(STATE)
 
-    singer.write_state(STATE)
 
 def sync_endpoint(schema_name):
     schema = load_schema(schema_name)
