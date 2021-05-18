@@ -184,6 +184,8 @@ def sync_endpoint(schema_name):
 
             item = transformer.transform(aligned_schema_row, schema)
 
+            LOGGER.info(schema_name + ' - ' + aligned_schema_row['id'])
+
             singer.write_record(schema_name,
                                 item,
                                 time_extracted=time_extracted)
