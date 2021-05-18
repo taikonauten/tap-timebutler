@@ -152,7 +152,7 @@ def sync_absences(schema_name, year):
 
     singer.write_state(STATE)
 
-def sync_endpoint(schema_name, params):
+def sync_endpoint(schema_name, params=None):
     schema = load_schema(schema_name)
 
     singer.write_schema(schema_name,
