@@ -140,8 +140,6 @@ def sync_absences(schema_name):
                 date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
                 date_aligned_shema_row['the_day'] = dt.strftime("%d.%m.%Y")
 
-                k += 1
-
                 remove_empty_date_times(date_aligned_shema_row, schema)
 
                 item = transformer.transform(date_aligned_shema_row, schema)
@@ -149,8 +147,10 @@ def sync_absences(schema_name):
                 singer.write_record(schema_name,
                                     item,
                                     time_extracted=time_extracted)
+
+                k += 1
                 
-                singer.write_state(STATE)
+        singer.write_state(STATE)
 
 
 def sync_endpoint(schema_name):
