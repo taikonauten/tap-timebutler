@@ -196,17 +196,17 @@ def do_sync():
 
     sync_absences("absences")
 
-    # sync_endpoint("users")
+    sync_endpoint("users")
 
-    # sync_endpoint("holidayentitlement")
+    sync_endpoint("holidayentitlement")
 
-    # sync_endpoint("workdays")
+    sync_endpoint("workdays")
 
-    # sync_endpoint("worktime")
+    sync_endpoint("worktime")
 
-    # sync_endpoint("projects")
+    sync_endpoint("projects")
 
-    # sync_endpoint("services")
+    sync_endpoint("services")
     
     LOGGER.info("Sync complete")
 
