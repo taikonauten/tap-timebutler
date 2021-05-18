@@ -178,7 +178,7 @@ def sync_endpoint(schema_name):
 
             while i < len(row):
 
-                aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
+                aligned_schema_row[properties[i]] = row[i].strip()
 
             remove_empty_date_times(aligned_schema_row, schema)
 
@@ -196,15 +196,15 @@ def do_sync():
 
     sync_endpoint("users")
 
-    sync_endpoint("holidayentitlement")
+    # sync_endpoint("holidayentitlement")
 
-    sync_endpoint("workdays")
+    # sync_endpoint("workdays")
 
-    sync_endpoint("worktime")
+    # sync_endpoint("worktime")
 
-    sync_endpoint("projects")
+    # sync_endpoint("projects")
 
-    sync_endpoint("services")
+    # sync_endpoint("services")
     
     # sync_absences("absences")
     
