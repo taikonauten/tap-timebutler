@@ -45,12 +45,6 @@ def load_and_write_schema(name, key_properties='id', bookmark_property='updated_
     singer.write_schema(name, schema, key_properties, bookmark_properties=[bookmark_property])
     return schema
 
-def get_start(key):
-    if key not in STATE:
-        STATE[key] = CONFIG['start_date']
-
-    return STATE[key]
-
 def get_url(endpoint):
     return BASE_API_URL + endpoint
 
@@ -155,6 +149,8 @@ def sync_absences(schema_name):
 def sync_endpoint(schema_name):
     schema = load_schema(schema_name)
 
+    LOGGER.info("Loaded Schema: " + schema_name)
+
     singer.write_schema(schema_name,
                         schema,
                         ["id"])
@@ -170,6 +166,8 @@ def sync_endpoint(schema_name):
 
         for row in response:
 
+            LOGGER.info(row)
+
             aligned_schema_row = {}
 
             row = np.array(row[0].split(';'))
@@ -183,8 +181,6 @@ def sync_endpoint(schema_name):
             remove_empty_date_times(aligned_schema_row, schema)
 
             item = transformer.transform(aligned_schema_row, schema)
-
-            LOGGER.info(schema_name + ' - ' + aligned_schema_row['id'])
 
             singer.write_record(schema_name,
                                 item,
