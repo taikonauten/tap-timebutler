@@ -100,8 +100,8 @@ def sync_absences(schema_name, year):
                         ["id"])
 
     with Transformer() as transformer:
-        url = get_url(schema_name, year)
-        response = request(url)
+        url = get_url(schema_name)
+        response = request(url, year)
         time_extracted = utils.now()
 
         properties = list(schema['properties'])
@@ -152,7 +152,7 @@ def sync_absences(schema_name, year):
 
     singer.write_state(STATE)
 
-def sync_endpoint(schema_name):
+def sync_endpoint(schema_name, params):
     schema = load_schema(schema_name)
 
     singer.write_schema(schema_name,
@@ -161,7 +161,7 @@ def sync_endpoint(schema_name):
 
     with Transformer() as transformer:
         url = get_url(schema_name)
-        response = request(url)
+        response = request(url, params)
         time_extracted = utils.now()
 
         properties = list(schema['properties'])
