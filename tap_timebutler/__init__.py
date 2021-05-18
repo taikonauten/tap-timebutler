@@ -92,7 +92,7 @@ def daterange(date1, date2):
     for n in range(int ((date2 - date1).days)+1):
         yield date1 + timedelta(n)
 
-def sync_endpoint(schema_name):
+def sync_absences(schema_name):
     schema = load_schema(schema_name)
 
     singer.write_schema(schema_name,
@@ -125,19 +125,60 @@ def sync_endpoint(schema_name):
                 else:
 
                     aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
-
-                date_from = aligned_schema_row['date_from'].split('/')
-                date_to = aligned_schema_row['date_to'].split('/')
-
-                k = 0
-
-                for dt in daterange(date(date_from[2], date_from[1], date_from[0]), date(date_to[2], date_to[1], date_to[0])):
-                  
-                    aligned_schema_row['the_day'] = dt.strftime("%d.%m.%Y")
-
-                    k += 1
                 
                 i += 1
+
+            date_from = aligned_schema_row['day_from'].split('/')
+            date_to = aligned_schema_row['day_to'].split('/')
+
+            k = 0
+
+            for dt in daterange(date(int(date_from[2]), int(date_from[1]), int(date_from[0])), date(int(date_to[2]), int(date_to[1]), int(date_to[0]))):
+
+                date_aligned_shema_row = aligned_schema_row
+              
+                date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
+                date_aligned_shema_row['the_day'] = dt.strftime("%d.%m.%Y")
+
+                k += 1
+
+                remove_empty_date_times(date_aligned_shema_row, schema)
+
+                item = transformer.transform(date_aligned_shema_row, schema)
+
+                singer.write_record(schema_name,
+                                    item,
+                                    time_extracted=time_extracted)
+
+    singer.write_state(STATE)
+
+def sync_endpoint(schema_name):
+    schema = load_schema(schema_name)
+
+    singer.write_schema(schema_name,
+                        schema,
+                        ["id"])
+
+    with Transformer() as transformer:
+        url = get_url(schema_name)
+        response = request(url)
+        time_extracted = utils.now()
+
+        properties = list(schema['properties'])
+
+        del response[0]
+
+        for row in response:
+
+            aligned_schema_row = {}
+
+            row = np.array(row[0].split(';'))
+
+            i = 0
+
+            while i < len(row):
+
+                aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
 
             remove_empty_date_times(aligned_schema_row, schema)
 
@@ -153,19 +194,19 @@ def sync_endpoint(schema_name):
 def do_sync():
     LOGGER.info("Starting sync")
 
-    sync_endpoint("absences")
+    sync_endpoint("users")
 
-    # sync_endpoint("users")
+    sync_endpoint("holidayentitlement")
 
-    # sync_endpoint("holidayentitlement")
+    sync_endpoint("workdays")
 
-    # sync_endpoint("workdays")
+    sync_endpoint("worktime")
 
-    # sync_endpoint("worktime")
+    sync_endpoint("projects")
 
-    # sync_endpoint("projects")
-
-    # sync_endpoint("services")
+    sync_endpoint("services")
+    
+    # sync_absences("absences")
     
     LOGGER.info("Sync complete")
 
