@@ -196,7 +196,7 @@ def sync_endpoint(schema_name):
 def do_sync():
     LOGGER.info("Starting sync")
 
-    today = datetime.datetime.now()
+    today = datetime.now()
 
     for year in range(2010,today.year):
         sync_absences("absences", {"year": year})
