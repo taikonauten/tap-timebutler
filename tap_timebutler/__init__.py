@@ -62,7 +62,7 @@ def get_url(endpoint):
     giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500,
     factor=2)
 @utils.ratelimit(100, 15)
-def request(url, params):
+def request(url, params=None):
     auth_token = AUTH.get_auth_token()
     auth_params = {"auth": auth_token}
     req = requests.Request("POST", url=url, params=auth_params.update(params)).prepare()
