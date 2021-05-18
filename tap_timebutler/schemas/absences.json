@@ -50,6 +50,10 @@
     },
     "user_id_of_the_substitute": {
       "type": ["null", "string"]
+    },
+    "the_day": {
+      "type": ["null", "string"],
+      "format": "date-time"
     }
   }
 }
