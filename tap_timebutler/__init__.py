@@ -6,7 +6,7 @@ import backoff
 import requests
 import csv
 import numpy as np
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 
 import singer
 from singer import Transformer, utils
@@ -62,10 +62,10 @@ def get_url(endpoint):
     giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500,
     factor=2)
 @utils.ratelimit(100, 15)
-def request(url):
+def request(url, params):
     auth_token = AUTH.get_auth_token()
-    params = {"auth": auth_token}
-    req = requests.Request("POST", url=url, params=params).prepare()
+    auth_params = {"auth": auth_token}
+    req = requests.Request("POST", url=url, params=auth_params.update(params)).prepare()
     LOGGER.info("POST {}".format(req.url))
     resp = SESSION.send(req)
     resp.raise_for_status()
@@ -92,7 +92,7 @@ def daterange(date1, date2):
     for n in range(int ((date2 - date1).days)+1):
         yield date1 + timedelta(n)
 
-def sync_absences(schema_name):
+def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
 
     singer.write_schema(schema_name,
@@ -100,7 +100,7 @@ def sync_absences(schema_name):
                         ["id"])
 
     with Transformer() as transformer:
-        url = get_url(schema_name)
+        url = get_url(schema_name, year)
         response = request(url)
         time_extracted = utils.now()
 
@@ -196,7 +196,10 @@ def sync_endpoint(schema_name):
 def do_sync():
     LOGGER.info("Starting sync")
 
-    sync_absences("absences")
+    today = datetime.datetime.now()
+
+    for year in range(2010,today.year):
+        sync_absences("absences", {"year": year})
 
     sync_endpoint("users")
 
