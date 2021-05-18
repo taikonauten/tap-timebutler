@@ -194,8 +194,6 @@ def sync_endpoint(schema_name):
 def do_sync():
     LOGGER.info("Starting sync")
 
-    sync_absences("absences")
-
     sync_endpoint("users")
 
     sync_endpoint("holidayentitlement")
@@ -207,6 +205,8 @@ def do_sync():
     sync_endpoint("projects")
 
     sync_endpoint("services")
+    
+    sync_absences("absences")
     
     LOGGER.info("Sync complete")
 
