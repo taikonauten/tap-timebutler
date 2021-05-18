@@ -133,7 +133,7 @@ def sync_absences(schema_name):
 
             k = 0
 
-            for dt in daterange(date(date_from[2], date_from[1], date_from[0]), date(date_to[2], date_to[1], date_to[0])):
+            for dt in daterange(date(int(date_from[2]), int(date_from[1]), int(date_from[0])), date(int(date_to[2]), int(date_to[1]), int(date_to[0]))):
 
                 date_aligned_shema_row = aligned_schema_row
               
