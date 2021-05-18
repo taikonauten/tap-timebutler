@@ -45,6 +45,12 @@ def load_and_write_schema(name, key_properties='id', bookmark_property='updated_
     singer.write_schema(name, schema, key_properties, bookmark_properties=[bookmark_property])
     return schema
 
+def get_start(key):
+    if key not in STATE:
+        STATE[key] = CONFIG['start_date']
+
+    return STATE[key]
+
 def get_url(endpoint):
     return BASE_API_URL + endpoint
 
@@ -149,8 +155,6 @@ def sync_absences(schema_name):
 def sync_endpoint(schema_name):
     schema = load_schema(schema_name)
 
-    LOGGER.info("Loaded Schema: " + schema_name)
-
     singer.write_schema(schema_name,
                         schema,
                         ["id"])
@@ -166,8 +170,6 @@ def sync_endpoint(schema_name):
 
         for row in response:
 
-            LOGGER.info(row)
-
             aligned_schema_row = {}
 
             row = np.array(row[0].split(';'))
@@ -176,7 +178,9 @@ def sync_endpoint(schema_name):
 
             while i < len(row):
 
-                aligned_schema_row[properties[i]] = row[i].strip()
+                aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
+
+                i += 1
 
             remove_empty_date_times(aligned_schema_row, schema)
 
@@ -192,19 +196,19 @@ def sync_endpoint(schema_name):
 def do_sync():
     LOGGER.info("Starting sync")
 
+    sync_absences("absences")
+
     sync_endpoint("users")
 
-    # sync_endpoint("holidayentitlement")
+    sync_endpoint("holidayentitlement")
 
-    # sync_endpoint("workdays")
+    sync_endpoint("workdays")
 
-    # sync_endpoint("worktime")
+    sync_endpoint("worktime")
 
-    # sync_endpoint("projects")
+    sync_endpoint("projects")
 
-    # sync_endpoint("services")
-    
-    # sync_absences("absences")
+    sync_endpoint("services")
     
     LOGGER.info("Sync complete")
 
