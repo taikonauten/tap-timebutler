@@ -65,7 +65,7 @@ def get_url(endpoint):
 def request(url, params=None):
     auth_token = AUTH.get_auth_token()
     auth_params = {"auth": auth_token}
-    req = requests.Request("POST", url=url, params=auth_params + params).prepare()
+    req = requests.Request("POST", url=url, params={**auth_params, **params}).prepare()
     LOGGER.info("POST {}".format(req.url))
     resp = SESSION.send(req)
     resp.raise_for_status()
