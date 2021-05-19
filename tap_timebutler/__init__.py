@@ -55,9 +55,9 @@ def get_start(key):
 def get_url(endpoint):
     return BASE_API_URL + endpoint
 
-def handle_absence_types(absence_type):
+def handle_absence_types(absence_type, field):
 
-    shorthandles = {
+    absences_map = {
       "Vacation": {
         "absence_shorthandle": "URL",
         "absence_id": 101,
@@ -100,7 +100,7 @@ def handle_absence_types(absence_type):
       },
     }
 
-    return shorthandles[absence_type]
+    return absences_map[absence_type][field]
 
 @backoff.on_exception(
     backoff.expo,
