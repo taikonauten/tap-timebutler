@@ -161,11 +161,13 @@ def sync_absences(schema_name, year):
 
             while i < len(row):
 
-                if properties[i] == 'the_day':
+                LOGGER.info(aligned_schema_row)
+
+                if aligned_schema_row == 'the_day':
 
                     continue
 
-                elif properties[i] == 'absence_shorthandle':
+                elif aligned_schema_row == 'absence_shorthandle':
 
                   aligned_schema_row[properties[i]] = handle_absence_types(aligned_schema_row['absence_type'], properties[i])
 
