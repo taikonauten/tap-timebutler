@@ -109,7 +109,7 @@ def handle_absence_types(absence_type, field):
     giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500,
     factor=2)
 @utils.ratelimit(100, 15)
-def request(url, params=None):
+def request(url, params={}):
     auth_token = AUTH.get_auth_token()
     auth_params = {"auth": auth_token}
     req = requests.Request("POST", url=url, params={**auth_params, **params}).prepare()
@@ -163,11 +163,11 @@ def sync_absences(schema_name, year):
 
                 LOGGER.info(aligned_schema_row)
 
-                if aligned_schema_row == 'the_day':
+                if properties[i] == 'the_day':
 
                     continue
 
-                elif aligned_schema_row == 'absence_shorthandle':
+                elif properties[i] == 'absence_shorthandle':
 
                   aligned_schema_row[properties[i]] = handle_absence_types(aligned_schema_row['absence_type'], properties[i])
 
