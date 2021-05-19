@@ -205,7 +205,7 @@ def sync_absences(schema_name, year):
 
     singer.write_state(STATE)
 
-def sync_endpoint(schema_name, params=None):
+def sync_endpoint(schema_name, params={}):
     schema = load_schema(schema_name)
 
     singer.write_schema(schema_name,
@@ -258,7 +258,7 @@ def do_sync():
     sync_endpoint("users")
 
     for year in years:
-        sync_endpoint("holidayentitlement")
+        sync_endpoint("holidayentitlement", {"year": year})
 
     sync_endpoint("workdays")
 
