@@ -169,17 +169,20 @@ def sync_absences(schema_name, year):
 
                 elif properties[i] == 'absence_shorthandle':
 
-                  aligned_schema_row[properties[i]] = handle_absence_types(aligned_schema_row['absence_type'], properties[i])
+                  continue
 
                 elif properties[i] == 'absence_id':
 
-                  aligned_schema_row[properties[i]] = handle_absence_types(aligned_schema_row['absence_type'], properties[i])
+                  continue
 
                 else:
 
                     aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
                 
                 i += 1
+
+            aligned_schema_row["absence_shorthandle"] = handle_absence_types(aligned_schema_row['absence_type'], "absence_shorthandle")
+            aligned_schema_row["absence_id"] = handle_absence_types(aligned_schema_row['absence_type'], "absence_id")
 
             date_from = aligned_schema_row['day_from'].split('/')
             date_to = aligned_schema_row['day_to'].split('/')
