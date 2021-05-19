@@ -13,7 +13,8 @@ setup(name='tap-timebutler',
           'singer-python==5.9.0',
           'requests==2.20.0',
           'pendulum==1.2.0',
-          'backoff==1.8.0'
+          'backoff==1.8.0',
+          'pandas==1.2.4'
       ],
       entry_points='''
           [console_scripts]

@@ -6,6 +6,7 @@ import backoff
 import requests
 import csv
 import numpy as np
+import pandas as pd
 from datetime import timedelta, date, datetime
 
 import singer
@@ -88,10 +89,6 @@ def remove_empty_date_times(item, schema):
         if item.get(field) is None:
             del item[field]
 
-def daterange(date1, date2):
-    for n in range(int ((date2 - date1).days)+1):
-        yield date1 + timedelta(n)
-
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
 
@@ -133,7 +130,7 @@ def sync_absences(schema_name, year):
 
             k = 0
 
-            for dt in daterange(date(int(date_from[2]), int(date_from[1]), int(date_from[0])), date(int(date_to[2]), int(date_to[1]), int(date_to[0]))):
+            for dt in pd.daterange(start=date_from[2] + '-' + date_from[1] + '-' + date_from[0], end=date_to[2] + '-' + date_to[1] + '-' + date_to[0]):
 
                 date_aligned_shema_row = aligned_schema_row
               
