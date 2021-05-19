@@ -55,6 +55,52 @@ def get_start(key):
 def get_url(endpoint):
     return BASE_API_URL + endpoint
 
+def handle_absence_types(absence_type):
+
+    shorthandles = {
+      "Vacation": {
+        "absence_shorthandle": "URL",
+        "absence_id": 101,
+      },
+      "Sickness": {
+        "absence_shorthandle": "KRA",
+        "absence_id": 102,
+      },
+      "miscellaneous": {
+        "absence_shorthandle": "SON",
+        "absence_id": 104,
+      },
+      "Ze": {
+        "absence_shorthandle": "ZAG",
+        "absence_id": 105,
+      },
+      "Berufsschule/Uni": {
+        "absence_shorthandle": "BER",
+        "absence_id": 106,
+      },
+      "Pflicht/AS": {
+        "absence_shorthandle": "PFL",
+        "absence_id": 107,
+      },
+      "TaikoWeekend": {
+        "absence_shorthandle": "TAW",
+        "absence_id": 108,
+      },
+      "Overtime": {
+        "absence_shorthandle": "OVT",
+        "absence_id": 109,
+      },
+      "Overtime reduction request": {
+        "absence_shorthandle": "OVT-R",
+        "absence_id": 110,
+      },
+      "Un": {
+        "absence_shorthandle": "BER",
+        "absence_id": 111,
+      },
+    }
+
+    return shorthandles[absence_type]
 
 @backoff.on_exception(
     backoff.expo,
@@ -115,9 +161,17 @@ def sync_absences(schema_name, year):
 
             while i < len(row):
 
-                if aligned_schema_row == 'the_day':
+                if properties[i] == 'the_day':
 
                     continue
+
+                elif properties[i] == 'absence_shorthandle':
+
+                  aligned_schema_row[properties[i]] = handle_absence_types(aligned_schema_row['absence_type'], properties[i])
+
+                elif properties[i] == 'absence_id':
+
+                  aligned_schema_row[properties[i]] = handle_absence_types(aligned_schema_row['absence_type'], properties[i])
 
                 else:
 

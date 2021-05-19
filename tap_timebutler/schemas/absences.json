@@ -27,6 +27,12 @@
     "absence_type": {
       "type": ["null", "string"]
     },
+    "absence_shorthandle": {
+      "type": ["null", "string"]
+    },
+    "absence_id": {
+      "type": ["null", "integer"]
+    },
     "extra_vacation_day": {
       "type": ["null", "boolean"]
     },
@@ -37,10 +43,10 @@
       "type": ["null", "string"]
     },
     "workdays": {
-      "type": ["null", "string"]
+      "type": ["null", "number"]
     },
     "hours": {
-      "type": ["null", "string"]
+      "type": ["null", "number"]
     },
     "medical_certificate": {
       "type": ["null", "string"]
@@ -49,7 +55,7 @@
       "type": ["null", "string"]
     },
     "user_id_of_the_substitute": {
-      "type": ["null", "string"]
+      "type": ["null", "number"]
     },
     "the_day": {
       "type": ["null", "string"],
