@@ -197,7 +197,7 @@ def do_sync():
     LOGGER.info("Starting sync")
 
     today = datetime.now()
-    years = range(2010,today.year)
+    years = range(2010,today.year + 1)
 
     for year in years:
         sync_absences("absences", {"year": year})
