@@ -27,12 +27,6 @@
     "absence_type": {
       "type": ["null", "string"]
     },
-    "absence_shorthandle": {
-      "type": ["null", "string"]
-    },
-    "absence_id": {
-      "type": ["null", "integer"]
-    },
     "extra_vacation_day": {
       "type": ["null", "boolean"]
     },
@@ -60,6 +54,12 @@
     "the_day": {
       "type": ["null", "string"],
       "format": "date-time"
+    },
+    "absence_shorthandle": {
+      "type": ["null", "string"]
+    },
+    "absence_id": {
+      "type": ["null", "integer"]
     }
   }
 }
