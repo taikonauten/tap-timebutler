@@ -43,10 +43,10 @@
       "type": ["null", "string"]
     },
     "workdays": {
-      "type": ["null", "number"]
+      "type": ["null", "string"]
     },
     "hours": {
-      "type": ["null", "number"]
+      "type": ["null", "string"]
     },
     "medical_certificate": {
       "type": ["null", "string"]
@@ -55,7 +55,7 @@
       "type": ["null", "string"]
     },
     "user_id_of_the_substitute": {
-      "type": ["null", "number"]
+      "type": ["null", "string"]
     },
     "the_day": {
       "type": ["null", "string"],
