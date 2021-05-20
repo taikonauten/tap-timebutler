@@ -15,10 +15,12 @@ from singer import Transformer, utils
 LOGGER = singer.get_logger()
 SESSION = requests.Session()
 REQUIRED_CONFIG_KEYS = [
-    "auth_token"
+    "auth_token",
+    "X-DFA-Token"
 ]
 
 BASE_API_URL = "https://timebutler.de/api/v1/"
+HOLIDAY_API_URL = "https://deutsche-feiertage-api.de/api/v1/"
 CONFIG = {}
 STATE = {}
 AUTH = {}
@@ -26,11 +28,26 @@ AUTH = {}
 
 class Auth:
     def __init__(self, auth_token):
-
         self._auth_token = auth_token
 
     def get_auth_token(self):
         return self._auth_token
+
+class XDFA:
+
+    holidays = {}
+
+    def __init__(self, xdfa_token):
+        self._xdfa_token = xdfa_token
+
+    def get_xdfa_token(self):
+        return self._xdfa_token
+
+    def get_holidays(self):
+        return self.holidays
+    
+    def set_holidays(self, holidays):
+        self.holidays = holidays
 
 
 def get_abs_path(path):
@@ -55,6 +72,9 @@ def get_start(key):
 def get_url(endpoint):
     return BASE_API_URL + endpoint
 
+def get_holiday_url(year):
+    return HOLIDAY_API_URL + year
+
 def handle_absence_types(absence_type, field):
 
     absences_map = {
@@ -65,6 +85,10 @@ def handle_absence_types(absence_type, field):
       "Sickness": {
         "absence_shorthandle": "KRA",
         "absence_id": 102,
+      },
+      "Feiertag": {
+        "absence_shorthandle": "FEI",
+        "absence_id": 103,
       },
       "miscellaneous": {
         "absence_shorthandle": "SON",
@@ -135,6 +159,17 @@ def remove_empty_date_times(item, schema):
         if item.get(field) is None:
             del item[field]
 
+
+def get_holidays(year):
+
+    url = get_holiday_url(year)
+    response = request(url)
+
+    XDFA.set_holidays(response)
+
+    LOGGER.info(XDFA.get_holidays)
+    
+
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
 
@@ -161,8 +196,6 @@ def sync_absences(schema_name, year):
 
             while i < len(row):
 
-                LOGGER.info(aligned_schema_row)
-
                 if properties[i] == 'the_day':
 
                     continue
@@ -180,6 +213,9 @@ def sync_absences(schema_name, year):
                     aligned_schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
                 
                 i += 1
+
+            
+            LOGGER.info(aligned_schema_row)
 
             aligned_schema_row["absence_shorthandle"] = handle_absence_types(aligned_schema_row['absence_type'], "absence_shorthandle")
             aligned_schema_row["absence_id"] = handle_absence_types(aligned_schema_row['absence_type'], "absence_id")
@@ -256,20 +292,23 @@ def do_sync():
     years = range(2010,today.year + 1)
 
     for year in years:
-        sync_absences("absences", {"year": year})
+        get_holidays(year)
 
-    sync_endpoint("users")
+    # for year in years:
+    #     sync_absences("absences", {"year": year})
 
-    for year in years:
-        sync_endpoint("holidayentitlement", {"year": year})
+    # sync_endpoint("users")
 
-    sync_endpoint("workdays")
+    # for year in years:
+    #     sync_endpoint("holidayentitlement", {"year": year})
 
-    sync_endpoint("worktime")
+    # sync_endpoint("workdays")
 
-    sync_endpoint("projects")
+    # sync_endpoint("worktime")
 
-    sync_endpoint("services")
+    # sync_endpoint("projects")
+
+    # sync_endpoint("services")
     
     LOGGER.info("Sync complete")
 
@@ -281,6 +320,8 @@ def main_impl():
     CONFIG.update(args.config)
     global AUTH  # pylint: disable=global-statement
     AUTH = Auth(CONFIG['auth_token'])
+    global XDFA
+    XDFA = XDFA(CONFIG['xdfa_token'])
     STATE.update(args.state)
     if args.discover:
         do_discover()
