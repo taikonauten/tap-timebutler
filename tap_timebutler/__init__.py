@@ -24,6 +24,7 @@ HOLIDAY_API_URL = "https://deutsche-feiertage-api.de/api/v1/"
 CONFIG = {}
 STATE = {}
 AUTH = {}
+HOLIDAYS = {}
 
 
 class Auth:
@@ -42,13 +43,6 @@ class XDFA:
 
     def get_xdfa_token(self):
         return self._xdfa_token
-
-    def get_holidays(self, year):
-        return self.holidays[year]
-    
-    def set_holidays(self, holidays, year):
-        self.holidays = holidays[year]
-
 
 def get_abs_path(path):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), path)
@@ -170,9 +164,9 @@ def get_holidays(year):
 
     response = request(url, params, headers)
 
-    XDFA.set_holidays(response, year)
+    HOLIDAYS[year] = response
 
-    LOGGER.info(XDFA.get_holidays("2021"))
+    LOGGER.info(HOLIDAYS[year])
     
 
 def sync_absences(schema_name, year):
