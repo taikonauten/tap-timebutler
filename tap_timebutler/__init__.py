@@ -43,11 +43,11 @@ class XDFA:
     def get_xdfa_token(self):
         return self._xdfa_token
 
-    def get_holidays(self):
-        return self.holidays
+    def get_holidays(self, year):
+        return self.holidays[year]
     
-    def set_holidays(self, holidays):
-        self.holidays = holidays
+    def set_holidays(self, holidays, year):
+        self.holidays[year] = holidays
 
 
 def get_abs_path(path):
@@ -170,9 +170,9 @@ def get_holidays(year):
 
     response = request(url, params, headers)
 
-    XDFA.set_holidays(response)
+    XDFA.set_holidays(response, year)
 
-    LOGGER.info(XDFA.get_holidays)
+    LOGGER.info(XDFA.get_holidays("2021"))
     
 
 def sync_absences(schema_name, year):
