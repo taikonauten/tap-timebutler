@@ -322,8 +322,8 @@ def do_sync():
     for year in years:
         get_holidays(str(year))
 
-    # for year in years:
-    #     sync_absences("absences", {"year": year})
+    for year in years:
+        sync_absences("absences", {"year": year})
 
     # sync_endpoint("users")
 
