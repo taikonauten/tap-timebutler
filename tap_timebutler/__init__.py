@@ -178,8 +178,8 @@ def get_holidays(year):
 
     HOLIDAYS[year] = holidays
 
-    for day in HOLIDAYS[year]:
-        LOGGER.info(day)
+    # for day in HOLIDAYS[year]:
+    #     LOGGER.info(day)
 
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
@@ -244,12 +244,14 @@ def sync_absences(schema_name, year):
             for dt in pd.date_range(start=date_from[2] + '-' + date_from[1] + '-' + date_from[0], end=date_to[2] + '-' + date_to[1] + '-' + date_to[0]):
 
                 date_aligned_shema_row = aligned_schema_row
+
+                date = dt.strftime("%d.%m.%Y")
               
                 date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
-                date_aligned_shema_row['the_day'] = dt.strftime("%d.%m.%Y")
+                date_aligned_shema_row['the_day'] = date
 
                 for day in HOLIDAYS[year]:
-                    if date_aligned_shema_row['the_day'] == day:
+                    if date == day:
                         date_aligned_shema_row['absence_type'] = 'Feiertag'
 
                 date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_shorthandle")
@@ -325,8 +327,8 @@ def do_sync():
     for year in years:
         get_holidays(str(year))
 
-    # for year in years:
-    #     sync_absences("absences", {"year": year})
+    for year in years:
+        sync_absences("absences", {"year": year})
 
     # sync_endpoint("users")
 
