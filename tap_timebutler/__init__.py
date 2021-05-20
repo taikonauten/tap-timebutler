@@ -170,7 +170,7 @@ def get_holidays(year):
 
         if row["holiday"]["regions"]["be"] == True:
 
-            date_split = row["holiday"]["date"].split('/')
+            date_split = row["holiday"]["date"].split('-')
 
             formatted_date = datetime(date_split[2], date_split[1], date_split[0])
 
