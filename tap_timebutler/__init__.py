@@ -173,7 +173,7 @@ def get_holidays(year):
         time_extracted = utils.now()
         response = response.json()
 
-        holidays = []
+        holidays = {}
         
         for row in response["holidays"]:
 
@@ -196,6 +196,7 @@ def get_holidays(year):
                                     item,
                                     time_extracted=time_extracted)
 
+    singer.write_state(STATE)
 
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
