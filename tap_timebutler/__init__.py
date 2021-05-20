@@ -252,8 +252,10 @@ def sync_absences(schema_name, year):
 
                 for days in HOLIDAYS[str(year['year'])]:
                     for day in days:
+                        LOGGER.info(day + ' - ' + date)
                         if date == day:
                             date_aligned_shema_row['absence_type'] = 'Feiertag'
+                            date_aligned_shema_row['absence_state'] = 'Approved'
 
                 date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_shorthandle")
                 date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_id")
