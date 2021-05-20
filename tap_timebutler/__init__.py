@@ -174,7 +174,7 @@ def get_holidays(year):
 
             formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
-            holidays.append({formatted_date.strftime("%d.%m.%Y")})
+            holidays.append(formatted_date.strftime("%d.%m.%Y"))
 
     HOLIDAYS[year] = holidays
 
@@ -250,9 +250,9 @@ def sync_absences(schema_name, year):
                 date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
                 date_aligned_shema_row['the_day'] = date
 
-                LOGGER.info(HOLIDAYS)
-                    # if date == day:
-                    #     date_aligned_shema_row['absence_type'] = 'Feiertag'
+                for day in HOLIDAYS[year]:
+                    if date == day:
+                        date_aligned_shema_row['absence_type'] = 'Feiertag'
 
                 date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_shorthandle")
                 date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_id")
