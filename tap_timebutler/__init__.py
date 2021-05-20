@@ -261,31 +261,34 @@ def sync_absences(schema_name, year):
             date_from = aligned_schema_row["day_from"].split("/")
             date_to = aligned_schema_row["day_to"].split("/")
 
-            k = 0
+            LOGGER.info(date_from)
+            LOGGER.info(date_to)
 
-            for dt in pd.date_range(start=date_from[2] + "-" + date_from[1] + "-" + date_from[0], end=date_to[2] + "-" + date_to[1] + "-" + date_to[0]):
+            # k = 0
 
-                date_aligned_shema_row = aligned_schema_row
+            # for dt in pd.date_range(start=date_from[2] + "-" + date_from[1] + "-" + date_from[0], end=date_to[2] + "-" + date_to[1] + "-" + date_to[0]):
 
-                date = dt.strftime("%d.%m.%Y")
+            #     date_aligned_shema_row = aligned_schema_row
+
+            #     date = dt.strftime("%d.%m.%Y")
               
-                date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
-                date_aligned_shema_row["the_day"] = date
+            #     date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
+            #     date_aligned_shema_row["the_day"] = date
 
-                date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_shorthandle")
-                date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_id")
+            #     date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_shorthandle")
+            #     date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_id")
 
-                k += 1
+            #     k += 1
 
-                remove_empty_date_times(date_aligned_shema_row, schema)
+            #     remove_empty_date_times(date_aligned_shema_row, schema)
 
-                item = transformer.transform(date_aligned_shema_row, schema)
+            #     item = transformer.transform(date_aligned_shema_row, schema)
 
-                singer.write_record(schema_name,
-                                    item,
-                                    time_extracted=time_extracted)
+    #             singer.write_record(schema_name,
+    #                                 item,
+    #                                 time_extracted=time_extracted)
 
-    singer.write_state(STATE)
+    # singer.write_state(STATE)
 
 def sync_endpoint(schema_name, params={}):
     schema = load_schema(schema_name)
@@ -341,24 +344,24 @@ def do_sync():
     today = datetime.now()
     years = range(2010,today.year + 1)
 
-    for year in years:
-        get_holidays(str(year))
+    # for year in years:
+    #     get_holidays(str(year))
 
     for year in years:
         sync_absences("absences", {"year": year})
 
-    sync_endpoint("users")
+    # sync_endpoint("users")
 
-    for year in years:
-        sync_endpoint("holidayentitlement", {"year": year})
+    # for year in years:
+    #     sync_endpoint("holidayentitlement", {"year": year})
 
-    sync_endpoint("workdays")
+    # sync_endpoint("workdays")
 
-    sync_endpoint("worktime")
+    # sync_endpoint("worktime")
 
-    sync_endpoint("projects")
+    # sync_endpoint("projects")
 
-    sync_endpoint("services")
+    # sync_endpoint("services")
     
     LOGGER.info("Sync complete")
 
