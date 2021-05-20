@@ -52,14 +52,14 @@ def load_schema(entity):
     return utils.load_json(get_abs_path("schemas/{}.json".format(entity)))
 
 
-def load_and_write_schema(name, key_properties='id', bookmark_property='updated_at'):
+def load_and_write_schema(name, key_properties="id", bookmark_property="updated_at"):
     schema = load_schema(name)
     singer.write_schema(name, schema, key_properties, bookmark_properties=[bookmark_property])
     return schema
 
 def get_start(key):
     if key not in STATE:
-        STATE[key] = CONFIG['start_date']
+        STATE[key] = CONFIG["start_date"]
 
     return STATE[key]
 
@@ -143,9 +143,9 @@ def request(url, params={}, headers={}):
 def remove_empty_date_times(item, schema):
     fields = []
 
-    for key in schema['properties']:
-        subschema = schema['properties'][key]
-        if subschema.get('format') == 'date-time':
+    for key in schema["properties"]:
+        subschema = schema["properties"][key]
+        if subschema.get("format") == "date-time":
             fields.append(key)
 
     for field in fields:
@@ -172,10 +172,10 @@ def get_holidays(year):
         response = request(url, params, headers)
         time_extracted = utils.now()
         response = response.json()
-
-        holidays = {}
         
         for row in response["holidays"]:
+
+            holidays = {}
 
             if row["holiday"]["regions"]["be"] == True:
 
@@ -212,13 +212,13 @@ def sync_absences(schema_name, year):
     with Transformer() as transformer:
         url = get_url(schema_name)
         response = request(url, params, headers={})
-        response = response.content.decode('utf-8')
-        cr = csv.reader(response.splitlines(), delimiter=',')
+        response = response.content.decode("utf-8")
+        cr = csv.reader(response.splitlines(), delimiter=",")
         response = list(cr)
 
         time_extracted = utils.now()
 
-        properties = list(schema['properties'])
+        properties = list(schema["properties"])
 
         del response[0]
 
@@ -226,21 +226,21 @@ def sync_absences(schema_name, year):
 
             aligned_schema_row = {}
 
-            row = np.array(row[0].split(';'))
+            row = np.array(row[0].split(";"))
 
             i = 0
 
             while i < len(row):
 
-                if properties[i] == 'the_day':
+                if properties[i] == "the_day":
 
                     continue
 
-                elif properties[i] == 'absence_shorthandle':
+                elif properties[i] == "absence_shorthandle":
 
                   continue
 
-                elif properties[i] == 'absence_id':
+                elif properties[i] == "absence_id":
 
                   continue
 
@@ -253,22 +253,22 @@ def sync_absences(schema_name, year):
             
             # LOGGER.info(aligned_schema_row)
 
-            date_from = aligned_schema_row['day_from'].split('/')
-            date_to = aligned_schema_row['day_to'].split('/')
+            date_from = aligned_schema_row["day_from"].split("/")
+            date_to = aligned_schema_row["day_to"].split("/")
 
             k = 0
 
-            for dt in pd.date_range(start=date_from[2] + '-' + date_from[1] + '-' + date_from[0], end=date_to[2] + '-' + date_to[1] + '-' + date_to[0]):
+            for dt in pd.date_range(start=date_from[2] + "-" + date_from[1] + "-" + date_from[0], end=date_to[2] + "-" + date_to[1] + "-" + date_to[0]):
 
                 date_aligned_shema_row = aligned_schema_row
 
                 date = dt.strftime("%d.%m.%Y")
               
-                date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
-                date_aligned_shema_row['the_day'] = date
+                date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
+                date_aligned_shema_row["the_day"] = date
 
-                date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_shorthandle")
-                date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_id")
+                date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_shorthandle")
+                date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_id")
 
                 k += 1
 
@@ -296,12 +296,12 @@ def sync_endpoint(schema_name, params={}):
     with Transformer() as transformer:
         url = get_url(schema_name)
         response = request(url, params, headers={})
-        response = response.content.decode('utf-8')
-        cr = csv.reader(response.splitlines(), delimiter=',')
+        response = response.content.decode("utf-8")
+        cr = csv.reader(response.splitlines(), delimiter=",")
         time_extracted = utils.now()
         response = list(cr)
 
-        properties = list(schema['properties'])
+        properties = list(schema["properties"])
 
         del response[0]
 
@@ -309,7 +309,7 @@ def sync_endpoint(schema_name, params={}):
 
             aligned_schema_row = {}
 
-            row = np.array(row[0].split(';'))
+            row = np.array(row[0].split(";"))
 
             i = 0
 
@@ -339,23 +339,23 @@ def do_sync():
     for year in years:
         get_holidays(str(year))
 
-    for year in years:
-        sync_absences("absences", {"year": year})
+    # for year in years:
+    #     sync_absences("absences", {"year": year})
 
-    sync_endpoint("users")
+    # sync_endpoint("users")
 
-    for year in years:
-        sync_endpoint("holidayentitlement", {"year": year})
+    # for year in years:
+    #     sync_endpoint("holidayentitlement", {"year": year})
 
-    sync_endpoint("workdays")
+    # sync_endpoint("workdays")
 
-    sync_endpoint("worktime")
+    # sync_endpoint("worktime")
 
-    sync_endpoint("projects")
+    # sync_endpoint("projects")
 
-    sync_endpoint("services")
+    # sync_endpoint("services")
     
-    LOGGER.info("Sync complete")
+    # LOGGER.info("Sync complete")
 
 def do_discover():
     print('{"streams":[]}')
@@ -364,9 +364,9 @@ def main_impl():
     args = utils.parse_args(REQUIRED_CONFIG_KEYS)
     CONFIG.update(args.config)
     global AUTH  # pylint: disable=global-statement
-    AUTH = Auth(CONFIG['auth_token'])
+    AUTH = Auth(CONFIG["auth_token"])
     global XDFA
-    XDFA = XDFA(CONFIG['x_dfa_token'])
+    XDFA = XDFA(CONFIG["x_dfa_token"])
     STATE.update(args.state)
     if args.discover:
         do_discover()
