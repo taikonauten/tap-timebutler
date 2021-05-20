@@ -134,9 +134,8 @@ def request(url, params={}, headers={}):
     LOGGER.info("POST {}".format(req.url))
     resp = SESSION.send(req)
     resp.raise_for_status()
-    response = resp.content.decode('utf-8')
 
-    return response
+    return resp
 
 # Any date-times values can either be a string or a null.
 # If null, parsing the date results in an error.
@@ -196,6 +195,7 @@ def sync_absences(schema_name, year):
         time_extracted = utils.now()
 
         cr = csv.reader(response.splitlines(), delimiter=',')
+        response = response.content.decode('utf-8')
         response = list(cr)
 
         properties = list(schema['properties'])
@@ -281,6 +281,7 @@ def sync_endpoint(schema_name, params={}):
         time_extracted = utils.now()
 
         cr = csv.reader(response.splitlines(), delimiter=',')
+        response = response.content.decode('utf-8')
         response = list(cr)
 
         properties = list(schema['properties'])
