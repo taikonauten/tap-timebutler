@@ -47,7 +47,7 @@ class XDFA:
         return self.holidays[year]
     
     def set_holidays(self, holidays, year):
-        self.holidays[year] = holidays
+        self.holidays = holidays[year]
 
 
 def get_abs_path(path):
