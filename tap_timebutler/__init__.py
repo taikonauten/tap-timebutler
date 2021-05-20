@@ -16,7 +16,7 @@ LOGGER = singer.get_logger()
 SESSION = requests.Session()
 REQUIRED_CONFIG_KEYS = [
     "auth_token",
-    "X-DFA-Token"
+    "x_dfa_token"
 ]
 
 BASE_API_URL = "https://timebutler.de/api/v1/"
@@ -340,7 +340,7 @@ def main_impl():
     global AUTH  # pylint: disable=global-statement
     AUTH = Auth(CONFIG['auth_token'])
     global XDFA
-    XDFA = XDFA(CONFIG['x-dfa-token'])
+    XDFA = XDFA(CONFIG['x_dfa_token'])
     STATE.update(args.state)
     if args.discover:
         do_discover()
