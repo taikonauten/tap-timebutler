@@ -311,7 +311,7 @@ def do_sync():
     years = range(2010,today.year + 1)
 
     for year in years:
-        get_holidays(year)
+        get_holidays(str(year))
 
     # for year in years:
     #     sync_absences("absences", {"year": year})
