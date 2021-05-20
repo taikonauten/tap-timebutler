@@ -250,7 +250,7 @@ def sync_absences(schema_name, year):
                 date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
                 date_aligned_shema_row['the_day'] = date
 
-                for days in HOLIDAYS[str(year)]:
+                for days in HOLIDAYS[year['year']]:
 
                     LOGGER.info(days)
                     for day in days:
