@@ -164,10 +164,19 @@ def get_holidays(year):
 
     response = request(url, params, headers)
 
-    HOLIDAYS[year] = response
+    holidays = {}
 
-    LOGGER.info(HOLIDAYS[year])
-    
+    for row in response["holidays"]:
+
+        if row["holiday"]["regions"]["be"] == True:
+
+            date_split = row["holiday"]["date"].split('/')
+
+            formatted_date = datetime(date_split[2], date_split[1], date_split[0])
+
+            holidays.append({formatted_date.strftime("%d.%m.%Y")})
+
+    HOLIDAYS[year] = holidays
 
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
@@ -223,9 +232,6 @@ def sync_absences(schema_name, year):
             
             LOGGER.info(aligned_schema_row)
 
-            aligned_schema_row["absence_shorthandle"] = handle_absence_types(aligned_schema_row['absence_type'], "absence_shorthandle")
-            aligned_schema_row["absence_id"] = handle_absence_types(aligned_schema_row['absence_type'], "absence_id")
-
             date_from = aligned_schema_row['day_from'].split('/')
             date_to = aligned_schema_row['day_to'].split('/')
 
@@ -237,6 +243,13 @@ def sync_absences(schema_name, year):
               
                 date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
                 date_aligned_shema_row['the_day'] = dt.strftime("%d.%m.%Y")
+
+                for day in HOLIDAYS[year]:
+                    if date_aligned_shema_row['the_day'] == day:
+                        date_aligned_shema_row['absence_type'] = 'Feiertag'
+
+                date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_shorthandle")
+                date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_id")
 
                 k += 1
 
