@@ -172,7 +172,7 @@ def get_holidays(year):
 
             date_split = row["holiday"]["date"].split('-')
 
-            formatted_date = datetime(int(date_split[2]), int(date_split[1]), int(date_split[0]))
+            formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
             holidays.append({formatted_date.strftime("%d.%m.%Y")})
 
