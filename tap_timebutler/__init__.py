@@ -155,31 +155,47 @@ def remove_empty_date_times(item, schema):
 
 def get_holidays(year):
 
+    schema_name = "absences"
+    schema = load_schema(schema_name)
+
+    singer.write_schema(schema_name,
+                        schema,
+                        ["id"])
+
     xdfa_token = XDFA.get_xdfa_token()
     headers = {"X-DFA-Token": xdfa_token}
     params = {}
 
-    url = get_holiday_url(year)
+    with Transformer() as transformer:
+        url = get_holiday_url(year)
 
-    response = request(url, params, headers)
-    response = response.json()
+        response = request(url, params, headers)
+        time_extracted = utils.now()
+        response = response.json()
 
-    holidays = []
+        holidays = []
+        
+        for row in response["holidays"]:
 
-    for row in response["holidays"]:
+            if row["holiday"]["regions"]["be"] == True:
 
-        if row["holiday"]["regions"]["be"] == True:
+                date_split = row["holiday"]["date"].split("-")
 
-            date_split = row["holiday"]["date"].split('-')
+                formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
-            formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+                holidays["the_day"] = formatted_date.strftime("%d.%m.%Y")
+                holidays["absence_type"] = "Feiertag"
+                holidays["absence_state"] = "Approved"
+                holidays["comment"] = row["holiday"]["name"]
+                holidays["absence_shorthandle"] = handle_absence_types(holidays["absence_type"], "absence_shorthandle")
+                holidays["absence_id"] = handle_absence_types(holidays["absence_type"], "absence_id")
 
-            holidays.append(formatted_date.strftime("%d.%m.%Y"))
+                item = transformer.transform(holidays, schema)
 
-    HOLIDAYS[year] = holidays
+                singer.write_record(schema_name,
+                                    item,
+                                    time_extracted=time_extracted)
 
-    # for day in HOLIDAYS[year]:
-    #     LOGGER.info(day)
 
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
@@ -249,12 +265,6 @@ def sync_absences(schema_name, year):
               
                 date_aligned_shema_row['id'] = int(date_aligned_shema_row['id']) + k
                 date_aligned_shema_row['the_day'] = date
-
-                for day in HOLIDAYS[str(year['year'])]:
-                    LOGGER.info(day + ' - ' + date)
-                    if date == day:
-                        date_aligned_shema_row['absence_type'] = 'Feiertag'
-                        date_aligned_shema_row['absence_state'] = 'Approved'
 
                 date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_shorthandle")
                 date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row['absence_type'], "absence_id")
