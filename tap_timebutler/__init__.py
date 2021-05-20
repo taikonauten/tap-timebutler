@@ -24,7 +24,7 @@ HOLIDAY_API_URL = "https://deutsche-feiertage-api.de/api/v1/"
 CONFIG = {}
 STATE = {}
 AUTH = {}
-HOLIDAYS = []
+HOLIDAYS = {}
 
 
 class Auth:
