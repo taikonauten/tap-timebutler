@@ -132,17 +132,17 @@ def handle_absence_types(absence_type, field):
     max_tries=5,
     giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500,
     factor=2)
+
 @utils.ratelimit(100, 15)
-def request(url, params={}):
-    auth_token = AUTH.get_auth_token()
-    auth_params = {"auth": auth_token}
-    req = requests.Request("POST", url=url, params={**auth_params, **params}).prepare()
+
+def request(url, params={}, headers={}):
+    req = requests.Request("POST", url=url, params=params, headers=headers).prepare()
     LOGGER.info("POST {}".format(req.url))
     resp = SESSION.send(req)
     resp.raise_for_status()
     response = resp.content.decode('utf-8')
-    cr = csv.reader(response.splitlines(), delimiter=',')
-    return list(cr)
+
+    return response
 
 # Any date-times values can either be a string or a null.
 # If null, parsing the date results in an error.
@@ -162,8 +162,13 @@ def remove_empty_date_times(item, schema):
 
 def get_holidays(year):
 
+    xdfa_token = XDFA.get_xdfa_token()
+    headers = {"X-DFA-Token": xdfa_token}
+    params = {}
+
     url = get_holiday_url(year)
-    response = request(url)
+
+    response = request(url, params, headers)
 
     XDFA.set_holidays(response)
 
@@ -173,14 +178,21 @@ def get_holidays(year):
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
 
+    auth_token = AUTH.get_auth_token()
+    auth_params = {"auth": auth_token}
+    params = {**auth_params, **year}
+
     singer.write_schema(schema_name,
                         schema,
                         ["id"])
 
     with Transformer() as transformer:
         url = get_url(schema_name)
-        response = request(url, year)
+        response = request(url, params, headers={})
         time_extracted = utils.now()
+
+        cr = csv.reader(response.splitlines(), delimiter=',')
+        response = list(cr)
 
         properties = list(schema['properties'])
 
@@ -247,14 +259,21 @@ def sync_absences(schema_name, year):
 def sync_endpoint(schema_name, params={}):
     schema = load_schema(schema_name)
 
+    auth_token = AUTH.get_auth_token()
+    auth_params = {"auth": auth_token}
+    params = {**auth_params, **params}
+
     singer.write_schema(schema_name,
                         schema,
                         ["id"])
 
     with Transformer() as transformer:
         url = get_url(schema_name)
-        response = request(url, params)
+        response = request(url, params, headers={})
         time_extracted = utils.now()
+
+        cr = csv.reader(response.splitlines(), delimiter=',')
+        response = list(cr)
 
         properties = list(schema['properties'])
 
@@ -321,7 +340,7 @@ def main_impl():
     global AUTH  # pylint: disable=global-statement
     AUTH = Auth(CONFIG['auth_token'])
     global XDFA
-    XDFA = XDFA(CONFIG['xdfa_token'])
+    XDFA = XDFA(CONFIG['x-dfa-token'])
     STATE.update(args.state)
     if args.discover:
         do_discover()
