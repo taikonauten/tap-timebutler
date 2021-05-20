@@ -192,11 +192,11 @@ def sync_absences(schema_name, year):
     with Transformer() as transformer:
         url = get_url(schema_name)
         response = request(url, params, headers={})
-        time_extracted = utils.now()
-
-        cr = csv.reader(response.splitlines(), delimiter=',')
         response = response.content.decode('utf-8')
+        cr = csv.reader(response.splitlines(), delimiter=',')
         response = list(cr)
+
+        time_extracted = utils.now()
 
         properties = list(schema['properties'])
 
