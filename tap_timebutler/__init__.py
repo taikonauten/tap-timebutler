@@ -331,18 +331,18 @@ def do_sync():
     for year in years:
         sync_absences("absences", {"year": year})
 
-    # sync_endpoint("users")
+    sync_endpoint("users")
 
-    # for year in years:
-    #     sync_endpoint("holidayentitlement", {"year": year})
+    for year in years:
+        sync_endpoint("holidayentitlement", {"year": year})
 
-    # sync_endpoint("workdays")
+    sync_endpoint("workdays")
 
-    # sync_endpoint("worktime")
+    sync_endpoint("worktime")
 
-    # sync_endpoint("projects")
+    sync_endpoint("projects")
 
-    # sync_endpoint("services")
+    sync_endpoint("services")
     
     LOGGER.info("Sync complete")
 
