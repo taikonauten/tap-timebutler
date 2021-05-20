@@ -172,6 +172,8 @@ def get_holidays(year):
         response = request(url, params, headers)
         time_extracted = utils.now()
         response = response.json()
+
+        id = 1
         
         for row in response["holidays"]:
 
@@ -182,13 +184,15 @@ def get_holidays(year):
                 date_split = row["holiday"]["date"].split("-")
 
                 formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
-
+                holidays["id"] = id
                 holidays["the_day"] = formatted_date.strftime("%d.%m.%Y")
                 holidays["absence_type"] = "Feiertag"
                 holidays["absence_state"] = "Approved"
                 holidays["comment"] = row["holiday"]["name"]
                 holidays["absence_shorthandle"] = handle_absence_types(holidays["absence_type"], "absence_shorthandle")
                 holidays["absence_id"] = handle_absence_types(holidays["absence_type"], "absence_id")
+
+                id += 1
 
                 item = transformer.transform(holidays, schema)
 
