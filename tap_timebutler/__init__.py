@@ -236,7 +236,7 @@ def sync_absences(schema_name, year):
                 i += 1
 
             
-            LOGGER.info(aligned_schema_row)
+            # LOGGER.info(aligned_schema_row)
 
             date_from = aligned_schema_row['day_from'].split('/')
             date_to = aligned_schema_row['day_to'].split('/')
