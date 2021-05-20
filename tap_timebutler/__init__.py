@@ -178,6 +178,9 @@ def get_holidays(year):
 
     HOLIDAYS[year] = holidays
 
+    for day in HOLIDAYS[year]:
+        LOGGER.info(day)
+
 def sync_absences(schema_name, year):
     schema = load_schema(schema_name)
 
@@ -322,8 +325,8 @@ def do_sync():
     for year in years:
         get_holidays(str(year))
 
-    for year in years:
-        sync_absences("absences", {"year": year})
+    # for year in years:
+    #     sync_absences("absences", {"year": year})
 
     # sync_endpoint("users")
 
