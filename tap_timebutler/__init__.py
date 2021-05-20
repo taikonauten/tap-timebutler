@@ -163,6 +163,7 @@ def get_holidays(year):
     url = get_holiday_url(year)
 
     response = request(url, params, headers)
+    response = response.json()
 
     holidays = {}
 
