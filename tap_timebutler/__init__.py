@@ -24,7 +24,7 @@ HOLIDAY_API_URL = "https://deutsche-feiertage-api.de/api/v1/"
 CONFIG = {}
 STATE = {}
 AUTH = {}
-HOLIDAYS = {}
+HOLIDAYS = []
 
 
 class Auth:
@@ -164,7 +164,7 @@ def get_holidays(year):
     response = request(url, params, headers)
     response = response.json()
 
-    holidays = {}
+    holidays = []
 
     for row in response["holidays"]:
 
