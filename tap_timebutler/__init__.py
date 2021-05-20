@@ -185,6 +185,7 @@ def get_holidays(year):
 
                 formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
                 holidays["id"] = id
+                holidays["user_id"] = 370701
                 holidays["the_day"] = formatted_date.strftime("%d.%m.%Y")
                 holidays["absence_type"] = "Feiertag"
                 holidays["absence_state"] = "Approved"
