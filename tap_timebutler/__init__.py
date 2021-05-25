@@ -261,34 +261,31 @@ def sync_absences(schema_name, year):
             date_from = aligned_schema_row["day_from"].split("/")
             date_to = aligned_schema_row["day_to"].split("/")
 
-            LOGGER.info(date_from)
-            LOGGER.info(date_to)
+            k = 0
 
-            # k = 0
+            for dt in pd.date_range(start=date_from[2] + "-" + date_from[1] + "-" + date_from[0], end=date_to[2] + "-" + date_to[1] + "-" + date_to[0], periods=None, freq="D", tz=None, normalize=True):
 
-            # for dt in pd.date_range(start=date_from[2] + "-" + date_from[1] + "-" + date_from[0], end=date_to[2] + "-" + date_to[1] + "-" + date_to[0]):
+                date_aligned_shema_row = aligned_schema_row
 
-            #     date_aligned_shema_row = aligned_schema_row
-
-            #     date = dt.strftime("%d.%m.%Y")
+                date = dt.strftime("%d.%m.%Y")
               
-            #     date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
-            #     date_aligned_shema_row["the_day"] = date
+                date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
+                date_aligned_shema_row["the_day"] = date
 
-            #     date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_shorthandle")
-            #     date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_id")
+                date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_shorthandle")
+                date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_id")
 
-            #     k += 1
+                k += 1
 
-            #     remove_empty_date_times(date_aligned_shema_row, schema)
+                remove_empty_date_times(date_aligned_shema_row, schema)
 
-            #     item = transformer.transform(date_aligned_shema_row, schema)
+                item = transformer.transform(date_aligned_shema_row, schema)
 
-    #             singer.write_record(schema_name,
-    #                                 item,
-    #                                 time_extracted=time_extracted)
+                singer.write_record(schema_name,
+                                    item,
+                                    time_extracted=time_extracted)
 
-    # singer.write_state(STATE)
+    singer.write_state(STATE)
 
 def sync_endpoint(schema_name, params={}):
     schema = load_schema(schema_name)
