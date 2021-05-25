@@ -194,7 +194,7 @@ def get_holidays(year):
                 holidays["the_day"] = formatted_date.strftime("%d.%m.%Y")
                 holidays["absence_type"] = "Feiertag"
                 holidays["absence_state"] = "Approved"
-                holidays["comment"] = row["holiday"]["name"]
+                holidays["comments"] = row["holiday"]["name"]
                 holidays["absence_shorthandle"] = handle_absence_types(holidays["absence_type"], "absence_shorthandle")
                 holidays["absence_id"] = handle_absence_types(holidays["absence_type"], "absence_id")
 
