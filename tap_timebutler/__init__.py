@@ -273,7 +273,7 @@ def sync_absences(schema_name, year):
 
                 date_aligned_shema_row = aligned_schema_row
 
-                date = dt.strftime("%d/%m/%Y")
+                date = dt.strftime("%Y/%m/%d")
               
                 date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
                 date_aligned_shema_row["the_day"] = date
