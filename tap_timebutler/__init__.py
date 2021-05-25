@@ -183,7 +183,7 @@ def get_holidays(year):
 
                 date_split = row["holiday"]["date"].split("-")
 
-                formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+                formatted_date = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
                 LOGGER.info(row["holiday"]["name"])
 
@@ -191,7 +191,7 @@ def get_holidays(year):
                 holidays["day_from"] = date_split
                 holidays["day_to"] = formatted_date
                 holidays["user_id"] = 370701
-                holidays["the_day"] = formatted_date.strftime("%d.%m.%Y")
+                holidays["the_day"] = formatted_date.strftime("%Y-%m-%d")
                 holidays["absence_type"] = "Feiertag"
                 holidays["absence_state"] = "Approved"
                 holidays["comments"] = row["holiday"]["name"]
