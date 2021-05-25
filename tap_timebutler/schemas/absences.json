@@ -5,12 +5,10 @@
       "type": ["null", "integer"]
     },
     "day_from": {
-      "type": ["null", "string"],
-      "format": "date-time"
+      "type": ["null", "string"]
     },
     "day_to": {
-      "type": ["null", "string"],
-      "format": "date-time"
+      "type": ["null", "string"]
     },
     "half_a_day": {
       "type": ["null", "boolean"]
