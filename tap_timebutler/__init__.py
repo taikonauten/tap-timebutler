@@ -258,14 +258,18 @@ def sync_absences(schema_name, year):
             
             # LOGGER.info(aligned_schema_row)
 
+            # d/m/Y
             date_from = aligned_schema_row["day_from"].split("/")
             date_to = aligned_schema_row["day_to"].split("/")
 
             k = 0
 
-            for dt in pd.date_range(start=date_from[1] + "/" + date_from[0] + "/" + date_from[2], end=date_to[1] + "/" + date_to[0] + "/" + date_to[2], periods=None, freq="D", tz=None, normalize=True):
+            daterange = pd.date_range(start=date_from[1] + "/" + date_from[0] + "/" + date_from[2], end=date_to[1] + "/" + date_to[0] + "/" + date_to[2], periods=None, freq="D", tz=None, normalize=True, closed=None)
 
-                LOGGER.info(dt)
+            LOGGER.info(daterange)
+            
+            # m/d/Y
+            for dt in daterange:
 
                 date_aligned_shema_row = aligned_schema_row
 
