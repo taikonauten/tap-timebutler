@@ -263,7 +263,7 @@ def sync_absences(schema_name, year):
 
             k = 0
 
-            for dt in pd.date_range(start=date_from[2] + "-" + date_from[1] + "-" + date_from[0], end=date_to[2] + "-" + date_to[1] + "-" + date_to[0], periods=None, freq="D", tz=None, normalize=True):
+            for dt in pd.date_range(start=date_from[1] + "/" + date_from[0] + "/" + date_from[2], end=date_to[1] + "/" + date_to[0] + "/" + date_to[2], periods=None, freq="D", tz=None, normalize=True):
 
                 LOGGER.info(dt)
 
