@@ -183,7 +183,7 @@ def get_holidays(year):
 
                 date_split = row["holiday"]["date"].split("-")
 
-                formatted_date = datetime.date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+                formatted_date = date(int(date_split[0]), int(date_split[1]), int(date_split[2]))
 
                 LOGGER.info(row["holiday"]["name"])
 
