@@ -184,6 +184,9 @@ def get_holidays(year):
                 date_split = row["holiday"]["date"].split("-")
 
                 formatted_date = datetime(int(date_split[0]), int(date_split[1]), int(date_split[2]))
+
+                LOGGER.info(row["holiday"]["name"])
+
                 holidays["id"] = id
                 holidays["date_from"] = date_split
                 holidays["date_to"] = formatted_date
@@ -257,9 +260,6 @@ def sync_absences(schema_name, year):
                 
                 i += 1
 
-            
-            # LOGGER.info(aligned_schema_row)
-
             # d0/m1/Y2
             date_from = aligned_schema_row["day_from"].split("/")
             date_to = aligned_schema_row["day_to"].split("/")
@@ -268,8 +268,6 @@ def sync_absences(schema_name, year):
 
             # m1/d0/Y2
             daterange = pd.date_range(start=date_from[1] + "/" + date_from[0] + "/" + date_from[2], end=date_to[1] + "/" + date_to[0] + "/" + date_to[2], periods=None, freq="D", tz=None, normalize=True, closed=None)
-
-            LOGGER.info(daterange)
 
             for dt in daterange:
 
