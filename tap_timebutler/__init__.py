@@ -386,9 +386,7 @@ def sync_workdays(schema_name):
                 
                 i += 1
 
-        for row in schema_row:
-
-            print(row)
+        print(schema_row)
 
                 
 
