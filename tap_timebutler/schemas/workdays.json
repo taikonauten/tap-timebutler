@@ -27,6 +27,16 @@
     },
     "sunday_working_time": {
       "type": ["null", "string"]
+    },
+    "the_day": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "absence_shorthandle": {
+      "type": ["null", "string"]
+    },
+    "absence_id": {
+      "type": ["null", "integer"]
     }
   }
 }

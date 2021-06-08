@@ -340,6 +340,92 @@ def sync_endpoint(schema_name, params={}):
 
     singer.write_state(STATE)
 
+def sync_workdays(schema_name):
+    schema = load_schema(schema_name)
+
+    auth_token = AUTH.get_auth_token()
+    auth_params = {"auth": auth_token}
+    params = {**auth_params}
+
+    singer.write_schema(schema_name,
+                        schema,
+                        ["id"])
+
+    with Transformer() as transformer:
+        url = get_url(schema_name)
+        response = request(url, params, headers={})
+        response = response.content.decode("utf-8")
+        cr = csv.reader(response.splitlines(), delimiter=",")
+        response = list(cr)
+
+        time_extracted = utils.now()
+
+        properties = list(schema["properties"])
+
+        del response[0]
+
+        aligned_row = []
+
+        for row in response:
+
+            schema_row = {}
+
+            row = np.array(row[0].split(";"))
+
+            i = 0
+
+            while i < len(row):
+
+                if properties[i] == ("the_day" or "absence_shorthandle" or "absense_id"):
+
+                    continue
+
+                else:
+
+                    schema_row[properties[i]] = None if row[i].strip() == "" else row[i].strip()
+                
+                i += 1
+
+        for row in schema_row:
+
+            aligned_row[row["user_id"]] = [row]
+
+        print(aligned_row)
+
+                
+
+    #         # d0/m1/Y2
+    #         date_from = aligned_schema_row["valid_from"].split("/")
+
+    #         k = 0
+
+    #         # m1/d0/Y2
+    #         daterange = pd.date_range(start=date_from[1] + "/" + date_from[0] + "/" + date_from[2], end=date_to[1] + "/" + date_to[0] + "/" + date_to[2], periods=None, freq="D", tz=None, normalize=True, closed=None)
+
+    #         for dt in daterange:
+
+    #             date_aligned_shema_row = aligned_schema_row
+
+    #             date = dt.strftime("%Y/%m/%d")
+              
+    #             date_aligned_shema_row["id"] = int(date_aligned_shema_row["id"]) + k
+    #             date_aligned_shema_row["the_day"] = date
+
+    #             date_aligned_shema_row["absence_shorthandle"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_shorthandle")
+    #             date_aligned_shema_row["absence_id"] = handle_absence_types(date_aligned_shema_row["absence_type"], "absence_id")
+
+    #             k += 1
+
+    #             remove_empty_date_times(date_aligned_shema_row, schema)
+
+    #             item = transformer.transform(date_aligned_shema_row, schema)
+
+    #             singer.write_record(schema_name,
+    #                                 item,
+    #                                 time_extracted=time_extracted)
+
+    # singer.write_state(STATE)
+
 
 def do_sync():
     LOGGER.info("Starting sync")
@@ -347,24 +433,24 @@ def do_sync():
     today = datetime.now()
     years = range(2010,today.year + 1)
 
-    for year in years:
-        get_holidays(str(year))
+    # for year in years:
+    #     get_holidays(str(year))
 
-    for year in years:
-        sync_absences("absences", {"year": year})
+    # for year in years:
+    #     sync_absences("absences", {"year": year})
 
-    sync_endpoint("users")
+    # sync_endpoint("users")
 
-    for year in years:
-        sync_endpoint("holidayentitlement", {"year": year})
+    # for year in years:
+    #     sync_endpoint("holidayentitlement", {"year": year})
 
-    sync_endpoint("workdays")
+    sync_workdays("workdays")
 
-    sync_endpoint("worktime")
+    # sync_endpoint("worktime")
 
-    sync_endpoint("projects")
+    # sync_endpoint("projects")
 
-    sync_endpoint("services")
+    # sync_endpoint("services")
     
     LOGGER.info("Sync complete")
 
