@@ -388,7 +388,9 @@ def sync_workdays(schema_name):
 
         for row in schema_row:
 
-            aligned_row[row["user_id"]] = [row]
+            user_id = row["user_id"]
+
+            aligned_row[user_id] = [row]
 
         print(aligned_row)
 
